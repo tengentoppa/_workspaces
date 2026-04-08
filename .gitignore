@@ -1,0 +1,9 @@
+# 私有變體 / 機器專屬覆寫
+*.local.code-workspace
+*.local.yaml
+.env
+.env.*
+
+# OS / 編輯器
+.DS_Store
+Thumbs.db

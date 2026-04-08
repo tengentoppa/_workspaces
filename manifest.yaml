@@ -1,0 +1,66 @@
+# 來源 repo 清單。bootstrap.{sh,ps1} 會依此 clone 到正確相對位置。
+#
+# 路徑相對於 _workspaces/ 的 parent (即 D:/Documents/Project/)。
+# 新機器使用流程：
+#   1. mkdir Project && cd Project
+#   2. git clone <_workspaces remote> _workspaces
+#   3. cd _workspaces && ./bootstrap.sh   (Windows: .\bootstrap.ps1)
+#
+# 註：每筆 entry 的 branch 是「初次 clone 時要 checkout 的 branch」，
+#     之後本地各自切換 branch，bootstrap 不會強迫覆寫。
+
+repos:
+  # ─── sport_scout workspace ───
+  - name: sport_spy
+    url: https://github.com/on-the-sky/sport_spy.git
+    path: b1e8/sport/sport_spy
+    branch: main
+  - name: sport_scout
+    url: https://github.com/on-the-sky/sport_scout.git
+    path: b1e8/sport/sport_scout
+    branch: main
+  - name: sport_logistics
+    url: https://github.com/b1e8tech/sport_logistics.git
+    path: b1e8/sport/sport_logistics
+    branch: main
+  - name: sport_matcher
+    url: https://github.com/b1e8tech/sport_matcher.git
+    path: b1e8/sport/sport_matcher
+    branch: main
+  # research 目前沒設 remote (本機資料夾)，先不放入；要分享請手動 init + push
+
+  # ─── bet_bot workspace ───
+  - name: bet_bot
+    url: https://github.com/on-the-sky/bet_bot.git
+    path: b1e8/bet_bot
+    branch: features/bot_client
+  - name: bot_fe
+    url: https://github.com/tengentoppa/bot_fe.git
+    path: b1e8/bot_fe
+    branch: refactor
+
+  # ─── safe_trade workspace ───
+  - name: safe_trade
+    url: https://github.com/royal98dev/safe_trade.git
+    path: b1e8/safe_trade
+    branch: main
+  - name: sport_scout_royal
+    url: https://github.com/b1e8tech/sport_scout_royal.git
+    path: b1e8/sport_scout_royal
+    branch: main
+  - name: core_wallet
+    url: https://github.com/royal98dev/core_wallet.git
+    path: royal/core_wallet
+    branch: main
+  - name: crypto_hound
+    url: https://github.com/royal98dev/crypto_hound.git
+    path: royal/crypto_hound
+    branch: main
+  - name: union_wallet
+    url: https://github.com/on-the-sky/union_wallet.git
+    path: royal/union_wallet
+    branch: main
+  - name: devops
+    url: https://github.com/royal98dev/devops.git
+    path: royal/devops
+    branch: main

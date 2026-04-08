@@ -1,0 +1,175 @@
+{
+	// ────────────────────────────────────────────────
+	// sport_scout — Polymarket sports 套利掃描 + 後台
+	// Registry : registry.onthesky.net/scout (sport_logistics 也共用)
+	//            registry.onthesky.net        (sport_matcher)
+	// Deploy   : docker build → push → (TBD: SSH 重啟)
+	// Repos    : sport_spy, sport_scout, sport_logistics, sport_matcher, research
+	// ────────────────────────────────────────────────
+	"folders": [
+		{ "name": "sport_spy",       "path": "../../b1e8/sport/sport_spy" },
+		{ "name": "sport_scout",     "path": "../../b1e8/sport/sport_scout" },
+		{ "name": "sport_logistics", "path": "../../b1e8/sport/sport_logistics" },
+		{ "name": "sport_matcher",   "path": "../../b1e8/sport/sport_matcher" },
+		{ "name": "research",        "path": "../../b1e8/sport/research" }
+	],
+
+	"settings": {
+		"search.useIgnoreFiles": true,
+		"files.exclude": {
+			"**/node_modules": true,
+			"**/dist": true,
+			"**/.git": true
+		}
+	},
+
+	"extensions": {
+		"recommendations": [
+			"ms-azuretools.vscode-docker",
+			"esbenp.prettier-vscode",
+			"dbaeumer.vscode-eslint"
+		]
+	},
+
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			// ─── sport_scout (NestJS, registry.onthesky.net/scout) ───
+			{
+				"label": "scout: build & push image",
+				"type": "shell",
+				"command": "docker",
+				"args": [
+					"build",
+					"-t", "sport_scout",
+					"-t", "registry.onthesky.net/scout/sport_scout",
+					"--target", "production",
+					"--platform=linux/amd64",
+					"."
+				],
+				"options": { "cwd": "${workspaceFolder:sport_scout}" },
+				"group": "build",
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "scout: docker push",
+				"type": "shell",
+				"command": "docker",
+				"args": ["push", "registry.onthesky.net/scout/sport_scout"],
+				"dependsOn": "scout: build & push image",
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "scout: dev",
+				"type": "shell",
+				"command": "pnpm",
+				"args": ["run", "start:dev"],
+				"options": { "cwd": "${workspaceFolder:sport_scout}" },
+				"isBackground": true,
+				"presentation": { "panel": "dedicated" }
+			},
+			{
+				"label": "scout: lint",
+				"type": "shell",
+				"command": "pnpm",
+				"args": ["run", "lint"],
+				"options": { "cwd": "${workspaceFolder:sport_scout}" }
+			},
+			{
+				"label": "scout: test",
+				"type": "shell",
+				"command": "pnpm",
+				"args": ["run", "test"],
+				"options": { "cwd": "${workspaceFolder:sport_scout}" },
+				"group": "test"
+			},
+
+			// ─── sport_logistics (NestJS, registry.onthesky.net/scout) ───
+			{
+				"label": "logistics: build & push image",
+				"type": "shell",
+				"command": "docker",
+				"args": [
+					"build",
+					"-t", "sport_logistics",
+					"-t", "registry.onthesky.net/scout/sport_logistics",
+					"."
+				],
+				"options": { "cwd": "${workspaceFolder:sport_logistics}" },
+				"group": "build",
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "logistics: docker push",
+				"type": "shell",
+				"command": "docker",
+				"args": ["push", "registry.onthesky.net/scout/sport_logistics"],
+				"dependsOn": "logistics: build & push image"
+			},
+			{
+				"label": "logistics: dev",
+				"type": "shell",
+				"command": "npm",
+				"args": ["run", "start:dev"],
+				"options": { "cwd": "${workspaceFolder:sport_logistics}" },
+				"isBackground": true,
+				"presentation": { "panel": "dedicated" }
+			},
+
+			// ─── sport_matcher (Vite/TS, registry.onthesky.net) ───
+			{
+				"label": "matcher: build & push image",
+				"type": "shell",
+				"command": "docker",
+				"args": [
+					"build",
+					"-t", "sport_matcher",
+					"-t", "registry.onthesky.net/sport_matcher",
+					"--platform=linux/amd64",
+					"."
+				],
+				"options": { "cwd": "${workspaceFolder:sport_matcher}" },
+				"group": "build",
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "matcher: docker push",
+				"type": "shell",
+				"command": "docker",
+				"args": ["push", "registry.onthesky.net/sport_matcher"],
+				"dependsOn": "matcher: build & push image"
+			},
+			{
+				"label": "matcher: dev",
+				"type": "shell",
+				"command": "pnpm",
+				"args": ["run", "dev"],
+				"options": { "cwd": "${workspaceFolder:sport_matcher}" },
+				"isBackground": true,
+				"presentation": { "panel": "dedicated" }
+			},
+
+			// ─── 跨 repo Git 工具 ───
+			{
+				"label": "git: status (all repos)",
+				"type": "shell",
+				"command": "bash",
+				"args": [
+					"-lc",
+					"set -e; for d in sport_spy sport_scout sport_logistics sport_matcher research; do echo; echo '=== '$d' ==='; git -C \"${workspaceFolder:sport_scout}/../$d\" status -sb || echo '(skip)'; done"
+				],
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "git: fetch all",
+				"type": "shell",
+				"command": "bash",
+				"args": [
+					"-lc",
+					"set -e; for d in sport_spy sport_scout sport_logistics sport_matcher research; do echo; echo '=== '$d' ==='; git -C \"${workspaceFolder:sport_scout}/../$d\" fetch --all --prune || echo '(skip)'; done"
+				],
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			}
+		]
+	}
+}

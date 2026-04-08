@@ -1,0 +1,121 @@
+{
+	// ────────────────────────────────────────────────
+	// bet_bot — 投注 bot 後端 + 前端控制台
+	// Registry : registry.onthesky.net/bet_bot
+	// Deploy   : docker build → push (兩個 image)
+	// Repos    : bet_bot (NestJS), bot_fe (前端)
+	// ────────────────────────────────────────────────
+	"folders": [
+		{ "name": "bet_bot", "path": "../../b1e8/bet_bot" },
+		{ "name": "bot_fe",  "path": "../../b1e8/bot_fe" }
+	],
+
+	"settings": {
+		"search.useIgnoreFiles": true,
+		"files.exclude": {
+			"**/node_modules": true,
+			"**/dist": true,
+			"**/.git": true
+		}
+	},
+
+	"extensions": {
+		"recommendations": [
+			"ms-azuretools.vscode-docker",
+			"esbenp.prettier-vscode",
+			"dbaeumer.vscode-eslint"
+		]
+	},
+
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			// ─── bet_bot (NestJS) ───
+			{
+				"label": "bet_bot: build & push image",
+				"type": "shell",
+				"command": "docker",
+				"args": [
+					"build",
+					"-t", "bet_bot",
+					"-t", "registry.onthesky.net/bet_bot/bet_bot",
+					"."
+				],
+				"options": { "cwd": "${workspaceFolder:bet_bot}" },
+				"group": "build",
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "bet_bot: docker push",
+				"type": "shell",
+				"command": "docker",
+				"args": ["push", "registry.onthesky.net/bet_bot/bet_bot"],
+				"dependsOn": "bet_bot: build & push image"
+			},
+			{
+				"label": "bet_bot: dev",
+				"type": "shell",
+				"command": "npm",
+				"args": ["run", "start:dev"],
+				"options": { "cwd": "${workspaceFolder:bet_bot}" },
+				"isBackground": true,
+				"presentation": { "panel": "dedicated" }
+			},
+
+			// ─── bot_fe (前端) ───
+			{
+				"label": "bot_fe: build & push image",
+				"type": "shell",
+				"command": "docker",
+				"args": [
+					"build",
+					"-t", "bot_fe",
+					"-t", "registry.onthesky.net/bet_bot/bot_fe",
+					"--platform=linux/amd64",
+					"."
+				],
+				"options": { "cwd": "${workspaceFolder:bot_fe}" },
+				"group": "build",
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "bot_fe: docker push",
+				"type": "shell",
+				"command": "docker",
+				"args": ["push", "registry.onthesky.net/bet_bot/bot_fe"],
+				"dependsOn": "bot_fe: build & push image"
+			},
+			{
+				"label": "bot_fe: dev",
+				"type": "shell",
+				"command": "pnpm",
+				"args": ["run", "dev"],
+				"options": { "cwd": "${workspaceFolder:bot_fe}" },
+				"isBackground": true,
+				"presentation": { "panel": "dedicated" }
+			},
+
+			// ─── 跨 repo Git 工具 ───
+			{
+				"label": "git: status (all repos)",
+				"type": "shell",
+				"command": "bash",
+				"args": [
+					"-lc",
+					"set -e; for d in bet_bot bot_fe; do echo; echo '=== '$d' ==='; git -C \"${workspaceFolder:bet_bot}/../$d\" status -sb || echo '(skip)'; done"
+				],
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "git: fetch all",
+				"type": "shell",
+				"command": "bash",
+				"args": [
+					"-lc",
+					"set -e; for d in bet_bot bot_fe; do echo; echo '=== '$d' ==='; git -C \"${workspaceFolder:bet_bot}/../$d\" fetch --all --prune || echo '(skip)'; done"
+				],
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			}
+		]
+	}
+}
