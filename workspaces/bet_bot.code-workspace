@@ -6,8 +6,8 @@
 	// Repos    : bet_bot (NestJS), bot_fe (前端)
 	// ────────────────────────────────────────────────
 	"folders": [
-		{ "name": "bet_bot", "path": "../../b1e8/bet_bot" },
-		{ "name": "bot_fe",  "path": "../../b1e8/bot_fe" }
+		{ "name": "samurai", "path": "../../b1e8/bet_bot" },
+		{ "name": "bot_manager",  "path": "../../b1e8/bot_fe" }
 	],
 
 	"settings": {
