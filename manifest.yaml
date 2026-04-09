@@ -76,3 +76,7 @@ repos:
     url: https://github.com/on-the-sky/grafana-mcp.git
     path: share/grafana
     branch: main
+  - name: grafana_mcp
+    url: https://github.com/on-the-sky/grafana-mcp.git
+    path: share/grafana
+    branch: main
