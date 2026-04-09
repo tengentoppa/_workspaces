@@ -13,19 +13,19 @@ repos:
   # ─── sport_scout workspace ───
   - name: sport_spy
     url: https://github.com/on-the-sky/sport_spy.git
-    path: scout/sport/sport_spy
+    path: scout/sport_spy
     branch: main
   - name: sport_scout
     url: https://github.com/on-the-sky/sport_scout.git
-    path: scout/sport/sport_scout
+    path: scout/sport_scout
     branch: main
   - name: sport_logistics
     url: https://github.com/on-the-sky/sport_logistics.git
-    path: scout/sport/sport_logistics
+    path: scout/sport_logistics
     branch: main
   - name: sport_matcher
     url: https://github.com/on-the-sky/sport_matcher.git
-    path: scout/sport/sport_matcher
+    path: scout/sport_matcher
     branch: main
   # research 目前沒設 remote (本機資料夾)，先不放入；要分享請手動 init + push
 

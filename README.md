@@ -28,7 +28,7 @@ D:/Documents/Project/        ← 或新機器上 ~/Project/
 ```
 
 `.code-workspace` 內的 folder 路徑都是相對 `_workspaces/workspaces/`，
-例如 `../../b1e8/sport/sport_scout`，跨機器只要根目錄一致就能直接運作。
+例如 `../../b1e8/sport_scout`，跨機器只要根目錄一致就能直接運作。
 
 ## Workspace 索引
 

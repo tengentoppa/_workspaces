@@ -9,23 +9,23 @@
 	"folders": [
 		{
 			"name": "sport_spy",
-			"path": "../../scout/sport/sport_spy"
+			"path": "../../scout/sport_spy"
 		},
 		{
 			"name": "sport_scout",
-			"path": "../../scout/sport/sport_scout"
+			"path": "../../scout/sport_scout"
 		},
 		{
 			"name": "sport_logistics",
-			"path": "../../scout/sport/sport_logistics"
+			"path": "../../scout/sport_logistics"
 		},
 		{
 			"name": "sport_matcher",
-			"path": "../../scout/sport/sport_matcher"
+			"path": "../../scout/sport_matcher"
 		},
 		{
 			"name": "research",
-			"path": "../../scout/sport/research"
+			"path": "../../scout/research"
 		},
 		{
 			"path": "../../scout/share/grafana"
