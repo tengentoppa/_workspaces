@@ -13,40 +13,44 @@ repos:
   # ─── sport_scout workspace ───
   - name: sport_spy
     url: https://github.com/on-the-sky/sport_spy.git
-    path: b1e8/sport/sport_spy
+    path: scout/sport/sport_spy
     branch: main
   - name: sport_scout
     url: https://github.com/on-the-sky/sport_scout.git
-    path: b1e8/sport/sport_scout
+    path: scout/sport/sport_scout
     branch: main
   - name: sport_logistics
-    url: https://github.com/b1e8tech/sport_logistics.git
-    path: b1e8/sport/sport_logistics
+    url: https://github.com/on-the-sky/sport_logistics.git
+    path: scout/sport/sport_logistics
     branch: main
   - name: sport_matcher
-    url: https://github.com/b1e8tech/sport_matcher.git
-    path: b1e8/sport/sport_matcher
+    url: https://github.com/on-the-sky/sport_matcher.git
+    path: scout/sport/sport_matcher
     branch: main
   # research 目前沒設 remote (本機資料夾)，先不放入；要分享請手動 init + push
 
-  # ─── bet_bot workspace ───
-  - name: bet_bot
-    url: https://github.com/on-the-sky/bet_bot.git
-    path: b1e8/bet_bot
+  # ─── samurai workspace ───
+  - name: samurai
+    url: https://github.com/on-the-sky/samurai.git
+    path: samurai/samurai
     branch: main
   - name: bot_manager
-    url: https://github.com/on-the-sky/bet_bot_manager.git
-    path: b1e8/bot_manager
+    url: https://github.com/on-the-sky/bot_manager.git
+    path: samurai/bot_manager
+    branch: main
+  - name: sentinel
+    url: https://github.com/royal98dev/sentinel.git
+    path: samurai/sentinel
     branch: main
 
   # ─── safe_trade workspace ───
   - name: safe_trade
     url: https://github.com/royal98dev/safe_trade.git
-    path: b1e8/safe_trade
+    path: royal/safe_trade
     branch: main
   - name: sport_scout_royal
-    url: https://github.com/b1e8tech/sport_scout_royal.git
-    path: b1e8/sport_scout_royal
+    url: https://github.com/royal98dev/sport_scout_royal.git
+    path: royal/sport_scout_royal
     branch: main
   - name: core_wallet
     url: https://github.com/royal98dev/core_wallet.git

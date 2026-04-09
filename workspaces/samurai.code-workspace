@@ -1,14 +1,14 @@
 {
 	// ────────────────────────────────────────────────
-	// bet_bot — 投注 bot 後端 + 前端控制台
-	// Registry : registry.onthesky.net/bet_bot
-	// Deploy   : docker build → push (兩個 image)
-	// Repos    : bet_bot (NestJS), bot_fe (前端)
+	// samurai — 投注 bot 後端 + 控制台 + 監控
+	// Registry : registry.onthesky.net/samurai
+	// Deploy   : docker build → push
+	// Repos    : samurai, bot_manager, sentinel
 	// ────────────────────────────────────────────────
 	"folders": [
-		{ "name": "samurai", "path": "../../b1e8/samurai" },
-		{ "name": "bot_manager",  "path": "../../b1e8/bot_manager" },
-		{ "name": "sentinel", "path": "../../b1e8/sentinel" }
+		{ "name": "samurai",     "path": "../../samurai/samurai" },
+		{ "name": "bot_manager", "path": "../../samurai/bot_manager" },
+		{ "name": "sentinel",    "path": "../../samurai/sentinel" }
 	],
 
 	"settings": {
@@ -31,67 +31,67 @@
 	"tasks": {
 		"version": "2.0.0",
 		"tasks": [
-			// ─── bet_bot (NestJS) ───
+			// ─── samurai (NestJS) ───
 			{
-				"label": "bet_bot: build & push image",
+				"label": "samurai: build & push image",
 				"type": "shell",
 				"command": "docker",
 				"args": [
 					"build",
-					"-t", "bet_bot",
-					"-t", "registry.onthesky.net/bet_bot/bet_bot",
+					"-t", "samurai",
+					"-t", "registry.onthesky.net/samurai/samurai",
 					"."
 				],
-				"options": { "cwd": "${workspaceFolder:bet_bot}" },
+				"options": { "cwd": "${workspaceFolder:samurai}" },
 				"group": "build",
 				"presentation": { "panel": "dedicated", "reveal": "always" }
 			},
 			{
-				"label": "bet_bot: docker push",
+				"label": "samurai: docker push",
 				"type": "shell",
 				"command": "docker",
-				"args": ["push", "registry.onthesky.net/bet_bot/bet_bot"],
-				"dependsOn": "bet_bot: build & push image"
+				"args": ["push", "registry.onthesky.net/samurai/samurai"],
+				"dependsOn": "samurai: build & push image"
 			},
 			{
-				"label": "bet_bot: dev",
+				"label": "samurai: dev",
 				"type": "shell",
 				"command": "npm",
 				"args": ["run", "start:dev"],
-				"options": { "cwd": "${workspaceFolder:bet_bot}" },
+				"options": { "cwd": "${workspaceFolder:samurai}" },
 				"isBackground": true,
 				"presentation": { "panel": "dedicated" }
 			},
 
-			// ─── bot_fe (前端) ───
+			// ─── bot_manager (前端) ───
 			{
-				"label": "bot_fe: build & push image",
+				"label": "bot_manager: build & push image",
 				"type": "shell",
 				"command": "docker",
 				"args": [
 					"build",
-					"-t", "bot_fe",
-					"-t", "registry.onthesky.net/bet_bot/bot_fe",
+					"-t", "bot_manager",
+					"-t", "registry.onthesky.net/samurai/bot_manager",
 					"--platform=linux/amd64",
 					"."
 				],
-				"options": { "cwd": "${workspaceFolder:bot_fe}" },
+				"options": { "cwd": "${workspaceFolder:bot_manager}" },
 				"group": "build",
 				"presentation": { "panel": "dedicated", "reveal": "always" }
 			},
 			{
-				"label": "bot_fe: docker push",
+				"label": "bot_manager: docker push",
 				"type": "shell",
 				"command": "docker",
-				"args": ["push", "registry.onthesky.net/bet_bot/bot_fe"],
-				"dependsOn": "bot_fe: build & push image"
+				"args": ["push", "registry.onthesky.net/samurai/bot_manager"],
+				"dependsOn": "bot_manager: build & push image"
 			},
 			{
-				"label": "bot_fe: dev",
+				"label": "bot_manager: dev",
 				"type": "shell",
 				"command": "pnpm",
 				"args": ["run", "dev"],
-				"options": { "cwd": "${workspaceFolder:bot_fe}" },
+				"options": { "cwd": "${workspaceFolder:bot_manager}" },
 				"isBackground": true,
 				"presentation": { "panel": "dedicated" }
 			},
@@ -103,7 +103,7 @@
 				"command": "bash",
 				"args": [
 					"-lc",
-					"set -e; for d in bet_bot bot_fe; do echo; echo '=== '$d' ==='; git -C \"${workspaceFolder:bet_bot}/../$d\" status -sb || echo '(skip)'; done"
+					"set -e; for d in samurai bot_manager sentinel; do echo; echo '=== '$d' ==='; git -C \"${workspaceFolder:samurai}/../$d\" status -sb || echo '(skip)'; done"
 				],
 				"presentation": { "panel": "dedicated", "reveal": "always" }
 			},
@@ -113,7 +113,7 @@
 				"command": "bash",
 				"args": [
 					"-lc",
-					"set -e; for d in bet_bot bot_fe; do echo; echo '=== '$d' ==='; git -C \"${workspaceFolder:bet_bot}/../$d\" fetch --all --prune || echo '(skip)'; done"
+					"set -e; for d in samurai bot_manager sentinel; do echo; echo '=== '$d' ==='; git -C \"${workspaceFolder:samurai}/../$d\" fetch --all --prune || echo '(skip)'; done"
 				],
 				"presentation": { "panel": "dedicated", "reveal": "always" }
 			}
