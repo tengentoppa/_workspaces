@@ -33,11 +33,11 @@ repos:
   - name: bet_bot
     url: https://github.com/on-the-sky/bet_bot.git
     path: b1e8/bet_bot
-    branch: features/bot_client
-  - name: bot_fe
-    url: https://github.com/tengentoppa/bot_fe.git
-    path: b1e8/bot_fe
-    branch: refactor
+    branch: main
+  - name: bot_manager
+    url: https://github.com/on-the-sky/bet_bot_manager.git
+    path: b1e8/bot_manager
+    branch: main
 
   # ─── safe_trade workspace ───
   - name: safe_trade
