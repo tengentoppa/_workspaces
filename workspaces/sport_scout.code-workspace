@@ -28,6 +28,7 @@
 			"path": "../../scout/research"
 		},
 		{
+			"name": "grafana-mcp",
 			"path": "../../share/grafana"
 		}
 	],

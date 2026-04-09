@@ -68,3 +68,11 @@ repos:
     url: https://github.com/royal98dev/devops.git
     path: royal/devops
     branch: main
+  - name: research
+    url: https://github.com/on-the-sky/research.git
+    path: scout/research
+    branch: main
+  - name: grafana-mcp
+    url: https://github.com/on-the-sky/grafana-mcp.git
+    path: share/grafana
+    branch: main
