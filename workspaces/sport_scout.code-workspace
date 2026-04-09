@@ -7,11 +7,29 @@
 	// Repos    : sport_spy, sport_scout, sport_logistics, sport_matcher, research
 	// ────────────────────────────────────────────────
 	"folders": [
-		{ "name": "sport_spy",       "path": "../../b1e8/sport/sport_spy" },
-		{ "name": "sport_scout",     "path": "../../b1e8/sport/sport_scout" },
-		{ "name": "sport_logistics", "path": "../../b1e8/sport/sport_logistics" },
-		{ "name": "sport_matcher",   "path": "../../b1e8/sport/sport_matcher" },
-		{ "name": "research",        "path": "../../b1e8/sport/research" }
+		{
+			"name": "sport_spy",
+			"path": "../../b1e8/sport/sport_spy"
+		},
+		{
+			"name": "sport_scout",
+			"path": "../../b1e8/sport/sport_scout"
+		},
+		{
+			"name": "sport_logistics",
+			"path": "../../b1e8/sport/sport_logistics"
+		},
+		{
+			"name": "sport_matcher",
+			"path": "../../b1e8/sport/sport_matcher"
+		},
+		{
+			"name": "research",
+			"path": "../../b1e8/sport/research"
+		},
+		{
+			"path": "../../b1e8/share/grafana"
+		}
 	],
 
 	"settings": {
