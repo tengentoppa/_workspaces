@@ -16,12 +16,12 @@
 			"path": "../../scout/sport_scout"
 		},
 		{
-			"name": "sport_logistics",
-			"path": "../../scout/sport_logistics"
+			"name": "scout_manager",
+			"path": "../../scout/scout_manager"
 		},
 		{
-			"name": "sport_matcher",
-			"path": "../../scout/sport_matcher"
+			"name": "sport_logistics",
+			"path": "../../scout/sport_logistics"
 		},
 		{
 			"name": "research",

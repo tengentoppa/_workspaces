@@ -23,9 +23,9 @@ repos:
     url: https://github.com/on-the-sky/sport_logistics.git
     path: scout/sport_logistics
     branch: main
-  - name: sport_matcher
-    url: https://github.com/on-the-sky/sport_matcher.git
-    path: scout/sport_matcher
+  - name: scout_manager
+    url: https://github.com/on-the-sky/scout_manager.git
+    path: scout/scout_manager
     branch: main
   # research 目前沒設 remote (本機資料夾)，先不放入；要分享請手動 init + push
 
