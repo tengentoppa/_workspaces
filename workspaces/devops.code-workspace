@@ -1,0 +1,226 @@
+{
+	// ────────────────────────────────────────────────
+	// safe_trade — Royal 套件 (錢包 + crypto_hound + safe_trade 前後端)
+	// Registry : registry.onthesky.net/royal
+	// Deploy   : 各 repo 各自 docker build/push；safe_trade 目前用 docker-compose
+	// Repos    : safe_trade (backend+frontend), sport_scout_royal,
+	//            royal/core_wallet, royal/crypto_hound, royal/union_wallet, royal/devops
+	// ────────────────────────────────────────────────
+	"folders": [
+		{ "name": "devops",            "path": "../../devops" }
+	],
+
+	"settings": {
+		"search.useIgnoreFiles": true,
+		"files.exclude": {
+			"**/node_modules": true,
+			"**/dist": true,
+			"**/.git": true
+		}
+	},
+
+	"extensions": {
+		"recommendations": [
+			"ms-azuretools.vscode-docker",
+			"esbenp.prettier-vscode",
+			"dbaeumer.vscode-eslint",
+			"golang.go"
+		]
+	},
+
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			// ─── safe_trade backend (NestJS) ───
+			{
+				"label": "safe_trade backend: dev",
+				"type": "shell",
+				"command": "npm",
+				"args": ["run", "start:dev"],
+				"options": { "cwd": "${workspaceFolder:safe_trade}/backend" },
+				"isBackground": true,
+				"presentation": { "panel": "dedicated" }
+			},
+			{
+				"label": "safe_trade backend: docker compose up",
+				"type": "shell",
+				"command": "docker",
+				"args": ["compose", "up", "-d"],
+				"options": { "cwd": "${workspaceFolder:safe_trade}/backend" },
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "safe_trade backend: docker compose down",
+				"type": "shell",
+				"command": "docker",
+				"args": ["compose", "down"],
+				"options": { "cwd": "${workspaceFolder:safe_trade}/backend" }
+			},
+
+			// ─── safe_trade frontend (Next.js) ───
+			{
+				"label": "safe_trade frontend: dev",
+				"type": "shell",
+				"command": "npm",
+				"args": ["run", "dev"],
+				"options": { "cwd": "${workspaceFolder:safe_trade}/frontend" },
+				"isBackground": true,
+				"presentation": { "panel": "dedicated" }
+			},
+			{
+				"label": "safe_trade frontend: docker compose up",
+				"type": "shell",
+				"command": "docker",
+				"args": ["compose", "up", "-d", "--build"],
+				"options": { "cwd": "${workspaceFolder:safe_trade}/frontend" },
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+
+			// ─── sport_scout_royal (NestJS, registry.onthesky.net/royal) ───
+			{
+				"label": "sport_scout_royal: build & push image",
+				"type": "shell",
+				"command": "docker",
+				"args": [
+					"build",
+					"-t", "sport_scout_royal",
+					"-t", "registry.onthesky.net/royal/sport_scout_royal",
+					"--platform=linux/amd64",
+					"."
+				],
+				"options": { "cwd": "${workspaceFolder:sport_scout_royal}" },
+				"group": "build",
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "sport_scout_royal: docker push",
+				"type": "shell",
+				"command": "docker",
+				"args": ["push", "registry.onthesky.net/royal/sport_scout_royal"],
+				"dependsOn": "sport_scout_royal: build & push image"
+			},
+			{
+				"label": "sport_scout_royal: dev",
+				"type": "shell",
+				"command": "pnpm",
+				"args": ["run", "start:dev"],
+				"options": { "cwd": "${workspaceFolder:sport_scout_royal}" },
+				"isBackground": true,
+				"presentation": { "panel": "dedicated" }
+			},
+
+			// ─── core_wallet (NestJS, registry.onthesky.net/royal) ───
+			{
+				"label": "core_wallet: build & push image",
+				"type": "shell",
+				"command": "docker",
+				"args": [
+					"build",
+					"-t", "core_wallet",
+					"-t", "registry.onthesky.net/royal/core_wallet",
+					"--platform=linux/amd64",
+					"."
+				],
+				"options": { "cwd": "${workspaceFolder:core_wallet}" },
+				"group": "build",
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "core_wallet: docker push",
+				"type": "shell",
+				"command": "docker",
+				"args": ["push", "registry.onthesky.net/royal/core_wallet"],
+				"dependsOn": "core_wallet: build & push image"
+			},
+			{
+				"label": "core_wallet: dev",
+				"type": "shell",
+				"command": "npm",
+				"args": ["run", "start:dev"],
+				"options": { "cwd": "${workspaceFolder:core_wallet}" },
+				"isBackground": true,
+				"presentation": { "panel": "dedicated" }
+			},
+
+			// ─── union_wallet (NestJS, registry.onthesky.net/royal) ───
+			{
+				"label": "union_wallet: build & push image",
+				"type": "shell",
+				"command": "docker",
+				"args": [
+					"build",
+					"-t", "union_wallet",
+					"-t", "registry.onthesky.net/royal/union_wallet",
+					"--platform=linux/amd64",
+					"."
+				],
+				"options": { "cwd": "${workspaceFolder:union_wallet}" },
+				"group": "build",
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "union_wallet: docker push",
+				"type": "shell",
+				"command": "docker",
+				"args": ["push", "registry.onthesky.net/royal/union_wallet"],
+				"dependsOn": "union_wallet: build & push image"
+			},
+			{
+				"label": "union_wallet: dev",
+				"type": "shell",
+				"command": "npm",
+				"args": ["run", "start:dev"],
+				"options": { "cwd": "${workspaceFolder:union_wallet}" },
+				"isBackground": true,
+				"presentation": { "panel": "dedicated" }
+			},
+
+			// ─── crypto_hound (Go, registry.onthesky.net/royal) ───
+			// build.sh 會先 go build → 再 docker build → 再 push，這裡用單一 task 呼叫
+			{
+				"label": "crypto_hound: build & push image",
+				"type": "shell",
+				"command": "bash",
+				"args": [
+					"-lc",
+					"set -e; export CGO_ENABLED=0 GOOS=linux GOARCH=amd64; mkdir -p bin; go build -o bin/crypto-engine ./cmd/crypto-engine; docker build -t crypto_hound:latest -t registry.onthesky.net/royal/crypto_hound:latest --platform=linux/amd64 -f ./dockerfile .; docker push registry.onthesky.net/royal/crypto_hound:latest"
+				],
+				"options": { "cwd": "${workspaceFolder:crypto_hound}" },
+				"group": "build",
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "crypto_hound: go build only",
+				"type": "shell",
+				"command": "bash",
+				"args": [
+					"-lc",
+					"CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/crypto-engine ./cmd/crypto-engine"
+				],
+				"options": { "cwd": "${workspaceFolder:crypto_hound}" }
+			},
+
+			// ─── 跨 repo Git 工具 ───
+			{
+				"label": "git: status (all repos)",
+				"type": "shell",
+				"command": "bash",
+				"args": [
+					"-lc",
+					"set +e; for f in \"${workspaceFolder:safe_trade}\" \"${workspaceFolder:sport_scout_royal}\" \"${workspaceFolder:core_wallet}\" \"${workspaceFolder:crypto_hound}\" \"${workspaceFolder:union_wallet}\" \"${workspaceFolder:devops}\"; do echo; echo '=== '$(basename \"$f\")' ==='; git -C \"$f\" status -sb || echo '(skip)'; done"
+				],
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			},
+			{
+				"label": "git: fetch all",
+				"type": "shell",
+				"command": "bash",
+				"args": [
+					"-lc",
+					"set +e; for f in \"${workspaceFolder:safe_trade}\" \"${workspaceFolder:sport_scout_royal}\" \"${workspaceFolder:core_wallet}\" \"${workspaceFolder:crypto_hound}\" \"${workspaceFolder:union_wallet}\" \"${workspaceFolder:devops}\"; do echo; echo '=== '$(basename \"$f\")' ==='; git -C \"$f\" fetch --all --prune || echo '(skip)'; done"
+				],
+				"presentation": { "panel": "dedicated", "reveal": "always" }
+			}
+		]
+	}
+}

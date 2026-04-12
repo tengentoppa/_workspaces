@@ -65,8 +65,8 @@ repos:
     path: royal/union_wallet
     branch: main
   - name: devops
-    url: https://github.com/royal98dev/devops.git
-    path: royal/devops
+    url: https://github.com/on-the-sky/devops.git
+    path: devops
     branch: main
   - name: research
     url: https://github.com/on-the-sky/research.git
