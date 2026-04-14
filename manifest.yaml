@@ -67,7 +67,7 @@ repos:
   - name: devops
     url: https://github.com/on-the-sky/devops.git
     path: devops
-    branch: main
+    branch: features/security
   - name: research
     url: https://github.com/on-the-sky/research.git
     path: scout/research
@@ -86,7 +86,7 @@ repos:
     url: https://github.com/tengentoppa/_workspaces.git
     path: _workspaces
     branch: main
-  - name: security
+  - name: sops
     url: https://github.com/on-the-sky/sops.git
-    path: security
-    branch: master
+    path: sops
+    branch: main
