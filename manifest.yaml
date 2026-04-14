@@ -61,7 +61,7 @@ repos:
     path: royal/crypto_hound
     branch: main
   - name: union_wallet
-    url: https://github.com/on-the-sky/union_wallet.git
+    url: https://github.com/royal98dev/union_wallet.git
     path: royal/union_wallet
     branch: main
   - name: devops
@@ -80,3 +80,13 @@ repos:
     url: https://github.com/on-the-sky/grafana-mcp.git
     path: share/grafana
     branch: main
+
+  # ─── base workspace ───
+  - name: _workspaces
+    url: https://github.com/tengentoppa/_workspaces.git
+    path: _workspaces
+    branch: main
+  - name: security
+    url: https://github.com/on-the-sky/sops.git
+    path: security
+    branch: master
