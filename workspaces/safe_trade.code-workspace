@@ -12,7 +12,6 @@
 		{ "name": "core_wallet",       "path": "../../royal/core_wallet" },
 		{ "name": "crypto_hound",      "path": "../../royal/crypto_hound" },
 		{ "name": "union_wallet",      "path": "../../royal/union_wallet" },
-		{ "name": "devops",            "path": "../../royal/devops" }
 	],
 
 	"settings": {

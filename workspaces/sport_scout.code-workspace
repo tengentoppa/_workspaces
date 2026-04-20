@@ -28,8 +28,8 @@
 			"path": "../../scout/research"
 		},
 		{
-			"name": "grafana_mcp",
-			"path": "../../share/grafana"
+			"name": "data_cli",
+			"path": "../../share/data_cli"
 		}
 	],
 
