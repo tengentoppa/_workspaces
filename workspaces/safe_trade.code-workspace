@@ -7,11 +7,30 @@
 	//            royal/core_wallet, royal/crypto_hound, royal/union_wallet, royal/devops
 	// ────────────────────────────────────────────────
 	"folders": [
-		{ "name": "safe_trade",        "path": "../../royal/safe_trade" },
-		{ "name": "sport_scout_royal", "path": "../../royal/sport_scout_royal" },
-		{ "name": "core_wallet",       "path": "../../royal/core_wallet" },
-		{ "name": "crypto_hound",      "path": "../../royal/crypto_hound" },
-		{ "name": "union_wallet",      "path": "../../royal/union_wallet" },
+		{
+			"name": "safe_trade",
+			"path": "../../royal/safe_trade"
+		},
+		{
+			"name": "sport_scout_royal",
+			"path": "../../royal/sport_scout_royal"
+		},
+		{
+			"name": "core_wallet",
+			"path": "../../royal/core_wallet"
+		},
+		{
+			"name": "crypto_hound",
+			"path": "../../royal/crypto_hound"
+		},
+		{
+			"name": "devops",
+			"path": "../../royal/devops"
+		},
+		{
+			"name": "union_wallet",
+			"path": "../../royal/union_wallet"
+		}
 	],
 
 	"settings": {
