@@ -28,6 +28,10 @@
 			"path": "../../royal/devops"
 		},
 		{
+			"name": "royal_docs",
+			"path": "../../royal/docs"
+		},
+		{
 			"name": "union_wallet",
 			"path": "../../royal/union_wallet"
 		}
