@@ -10,47 +10,6 @@
 #     之後本地各自切換 branch，bootstrap 不會強迫覆寫。
 
 repos:
-  # ─── sport_scout workspace ───
-  - name: sport_spy
-    url: https://github.com/on-the-sky/sport_spy.git
-    path: scout/sport_spy
-    branch: main
-  - name: sport_scout
-    url: https://github.com/on-the-sky/sport_scout.git
-    path: scout/sport_scout
-    branch: main
-  - name: sport_logistics
-    url: https://github.com/on-the-sky/sport_logistics.git
-    path: scout/sport_logistics
-    branch: main
-  - name: scout_manager
-    url: https://github.com/on-the-sky/scout_manager.git
-    path: scout/scout_manager
-    branch: main
-  - name: data_cli
-    url: https://github.com/on-the-sky/data_cli.git
-    path: share/data_cli
-    branch: main
-  - name: research
-    url: https://github.com/on-the-sky/research.git
-    path: scout/research
-    branch: main
-  # research 目前沒設 remote (本機資料夾)，先不放入；要分享請手動 init + push
-
-  # ─── samurai workspace ───
-  - name: samurai
-    url: https://github.com/on-the-sky/samurai.git
-    path: samurai/samurai
-    branch: main
-  - name: bot_manager
-    url: https://github.com/on-the-sky/bot_manager.git
-    path: samurai/bot_manager
-    branch: main
-  - name: sentinel
-    url: https://github.com/royal98dev/sentinel.git
-    path: samurai/sentinel
-    branch: main
-
   # ─── safe_trade workspace ───
   - name: safe_trade
     url: https://github.com/royal98dev/safe_trade.git
@@ -68,10 +27,6 @@ repos:
     url: https://github.com/royal98dev/crypto_hound.git
     path: royal/crypto_hound
     branch: main
-  - name: union_wallet
-    url: https://github.com/royal98dev/union_wallet.git
-    path: royal/union_wallet
-    branch: main
   - name: devops
     url: https://github.com/royal98dev/devops.git
     path: royal/devops
@@ -80,12 +35,58 @@ repos:
     url: https://github.com/on-the-sky/royal_docs.git
     path: royal/docs
     branch: main
+  - name: union_wallet
+    url: https://github.com/royal98dev/union_wallet.git
+    path: royal/union_wallet
+    branch: main
 
-  # ─── base workspace ───
+  # ─── samurai workspace ───
+  - name: samurai
+    url: https://github.com/on-the-sky/samurai.git
+    path: samurai/samurai
+    branch: main
+  - name: bot_manager
+    url: https://github.com/on-the-sky/bot_manager.git
+    path: samurai/bot_manager
+    branch: main
+  - name: sentinel
+    url: https://github.com/royal98dev/sentinel.git
+    path: samurai/sentinel
+    branch: main
+
+  # ─── sport_scout workspace ───
+  - name: sport_spy
+    url: https://github.com/on-the-sky/sport_spy.git
+    path: scout/sport_spy
+    branch: main
+  - name: sport_scout
+    url: https://github.com/on-the-sky/sport_scout.git
+    path: scout/sport_scout
+    branch: main
+  - name: scout_manager
+    url: https://github.com/on-the-sky/scout_manager.git
+    path: scout/scout_manager
+    branch: main
+  - name: sport_logistics
+    url: https://github.com/on-the-sky/sport_logistics.git
+    path: scout/sport_logistics
+    branch: main
+  - name: research
+    url: https://github.com/on-the-sky/research.git
+    path: scout/research
+    branch: main
+  - name: data_cli
+    url: https://github.com/on-the-sky/data_cli.git
+    path: share/data_cli
+    branch: main
+
+  # ─── structure workspace ───
   - name: _workspaces
     url: https://github.com/tengentoppa/_workspaces.git
     path: _workspaces
     branch: main
+
+  # ─── orphan (not in any workspace) ───
   - name: sops
     url: https://github.com/on-the-sky/sops.git
     path: sops

@@ -7,3 +7,18 @@
 # OS / 編輯器
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
+
+# Python (sync.py 會產生)
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# 其他
+*.log
+*.bak
+*.tmp
+manifest.yaml.tmp
