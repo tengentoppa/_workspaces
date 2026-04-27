@@ -86,6 +86,12 @@ repos:
     path: _workspaces
     branch: main
 
+  # ─── tmp workspace ───
+  - name: bet5a
+    url: https://github.com/on-the-sky/bet5a.git
+    path: royal/bot/bet5a
+    branch: main
+
   # ─── orphan (not in any workspace) ───
   - name: sops
     url: https://github.com/on-the-sky/sops.git
