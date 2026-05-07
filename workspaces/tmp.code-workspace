@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../devops"
+		},
+		{
+			"path": "../../base"
 		}
 	],
 	"settings": {}

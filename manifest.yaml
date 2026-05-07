@@ -91,3 +91,7 @@ repos:
     url: https://github.com/on-the-sky/bet5a.git
     path: royal/bot/bet5a
     branch: main
+  - name: base
+    url: https://github.com/on-the-sky/base.git
+    path: base
+    branch: main
