@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "../../royal/bot/bet5a"
+		},
+		{
+			"path": "../../devops"
 		}
 	],
 	"settings": {}

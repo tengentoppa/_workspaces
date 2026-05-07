@@ -30,6 +30,9 @@
 		{
 			"name": "data_cli",
 			"path": "../../share/data_cli"
+		},
+		{
+			"path": "../../devops"
 		}
 	],
 
