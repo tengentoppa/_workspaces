@@ -6,6 +6,9 @@
 		{
 			"name": "devops",
 			"path": "../../devops"
+		},
+		{
+			"path": "../../base"
 		}
 	],
 	"settings": {}
