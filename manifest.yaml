@@ -53,6 +53,14 @@ repos:
     url: https://github.com/royal98dev/sentinel.git
     path: samurai/sentinel
     branch: main
+  - name: bet5a
+    url: https://github.com/on-the-sky/bet5a.git
+    path: royal/bot/bet5a
+    branch: main
+  - name: base
+    url: https://github.com/on-the-sky/base.git
+    path: base
+    branch: main
 
   # ─── sport_scout workspace ───
   - name: sport_spy
@@ -84,14 +92,4 @@ repos:
   - name: _workspaces
     url: https://github.com/tengentoppa/_workspaces.git
     path: _workspaces
-    branch: main
-  - name: base
-    url: https://github.com/on-the-sky/base.git
-    path: base
-    branch: main
-
-  # ─── tmp workspace ───
-  - name: bet5a
-    url: https://github.com/on-the-sky/bet5a.git
-    path: royal/bot/bet5a
     branch: main
