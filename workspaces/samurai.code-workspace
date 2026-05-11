@@ -6,9 +6,30 @@
 	// Repos    : samurai, bot_manager, sentinel
 	// ────────────────────────────────────────────────
 	"folders": [
-		{ "name": "samurai",     "path": "../../samurai/samurai" },
-		{ "name": "bot_manager", "path": "../../samurai/bot_manager" },
-		{ "name": "sentinel",    "path": "../../samurai/sentinel" }
+		{
+			"name": "samurai",
+			"path": "../../samurai/samurai"
+		},
+		{
+			"name": "bot_manager",
+			"path": "../../samurai/bot_manager"
+		},
+		{
+			"name": "sentinel",
+			"path": "../../samurai/sentinel"
+		},
+		{
+			"name": "bet5a",
+			"path": "../../royal/bot/bet5a"
+		},
+		{
+			"name": "base",
+			"path": "../../base"
+		},
+		{
+			"name": "devops",
+			"path": "../../devops/bet_bot"
+		}
 	],
 
 	"settings": {
