@@ -1,6 +1,7 @@
 {
 	"folders": [
 		{
+			"name": "workspaces",
 			"path": ".."
 		},
 		{
@@ -8,6 +9,7 @@
 			"path": "../../devops"
 		},
 		{
+			"name": "base",
 			"path": "../../base"
 		}
 	],
