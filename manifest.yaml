@@ -10,6 +10,12 @@
 #     之後本地各自切換 branch，bootstrap 不會強迫覆寫。
 
 repos:
+  # ─── prototype workspace ───
+  - name: chat_forge
+    url: https://github.com/tengentoppa/chat_forge.git
+    path: prototype/chat_forge
+    branch: master
+
   # ─── safe_trade workspace ───
   - name: safe_trade
     url: https://github.com/royal98dev/safe_trade.git
