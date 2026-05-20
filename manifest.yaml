@@ -11,10 +11,30 @@
 
 repos:
   # ─── prototype workspace ───
+  - name: base_template
+    url: https://github.com/on-the-sky/base_template.git
+    path: prototype/base_template
+    branch: main
   - name: chat_forge
-    url: https://github.com/tengentoppa/chat_forge.git
+    url: https://github.com/on-the-sky/chat_forge.git
     path: prototype/chat_forge
-    branch: master
+    branch: main
+  - name: chat_bridge
+    url: https://github.com/on-the-sky/chat_bridge.git
+    path: prototype/chat_bridge
+    branch: main
+  - name: chat_admin
+    url: https://github.com/on-the-sky/chat_admin.git
+    path: prototype/chat_admin
+    branch: main
+  - name: net_agent
+    url: https://github.com/on-the-sky/net_agent.git
+    path: prototype/net_agent
+    branch: main
+  - name: session_hub
+    url: https://github.com/on-the-sky/session_hub.git
+    path: prototype/session_hub
+    branch: main
 
   # ─── safe_trade workspace ───
   - name: safe_trade
