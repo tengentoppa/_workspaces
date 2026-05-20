@@ -1,6 +1,9 @@
 {
 	"folders": [
 		{
+			"path": "../../prototype/base_template"
+		},
+		{
 			"path": "../../prototype/chat_forge"
 		},
 		{
@@ -11,9 +14,6 @@
 		},
 		{
 			"path": "../../prototype/net_agent"
-		},
-		{
-			"path": "../../prototype/base_template"
 		},
 		{
 			"path": "../../prototype/session_hub"
