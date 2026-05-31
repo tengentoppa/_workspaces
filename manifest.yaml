@@ -35,6 +35,10 @@ repos:
     url: https://github.com/on-the-sky/session_hub.git
     path: prototype/session_hub
     branch: main
+  - name: packages
+    url: https://github.com/on-the-sky/packages.git
+    path: prototype/packages
+    branch: main
 
   # ─── safe_trade workspace ───
   - name: safe_trade
@@ -62,7 +66,7 @@ repos:
     path: royal/docs
     branch: main
   - name: union_wallet
-    url: https://github.com/royal98dev/union_wallet.git
+    url: https://github.com/on-the-sky/union_wallet.git
     path: royal/union_wallet
     branch: main
 

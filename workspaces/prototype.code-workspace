@@ -17,6 +17,9 @@
 		},
 		{
 			"path": "../../prototype/session_hub"
+		},
+		{
+			"path": "../../prototype/packages"
 		}
 	],
 	"settings": {}
