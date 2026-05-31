@@ -26,7 +26,10 @@ fi
 
 # 用 awk 解析 yaml 的 repos 區段（不依賴 yq，避免要先裝工具）
 # 期待格式：每個 entry 連續四行 name/url/path/branch，順序無關。
-mapfile -t LINES < <(awk '
+LINES=()
+while IFS= read -r line; do
+  LINES+=("$line")
+done < <(awk '
   /^[[:space:]]*-[[:space:]]+name:/ { in_entry=1; name=""; url=""; path=""; branch=""; }
   in_entry && /name:/    { sub(/.*name:[[:space:]]*/,""); name=$0 }
   in_entry && /url:/     { sub(/.*url:[[:space:]]*/,""); url=$0 }
