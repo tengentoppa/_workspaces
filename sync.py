@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
 """Regenerate manifest.yaml from workspaces/*.code-workspace.
 
-Groups repos by workspace (alphabetical by file name) and keeps
-the folder order from each workspace. The repos: section of the
-manifest is rewritten from scratch, so reorderings, renames, and
-removals in workspace files propagate cleanly — no duplicates and
-no stale ordering.
+Groups repos by workspace (alphabetical by file name) and keeps the folder
+order from each workspace. The repos: section is rewritten from scratch, so
+reorderings, renames, and removals in workspace files propagate cleanly — no
+duplicates and no stale ordering.
+
+Identity model
+--------------
+A workspace folder is NOT assumed to be its own clone. Repo identity is the
+enclosing git work-tree (``git rev-parse --show-toplevel``), so a folder that
+points at a *subdirectory* of a repo (e.g. ``devops/bet_bot``) resolves back to
+the repo root (``devops``). Multiple folders that live inside the same repo —
+or reference it both whole and by subdir — collapse to a single manifest entry.
+
+Everything is keyed by clone **path** (relative to PROJECT_ROOT), never by the
+display ``name``. Two unrelated repos may legitimately share a basename (e.g.
+``devops`` vs ``royal/devops``); names are a VS Code Explorer concern and only
+need to be unique *within a single .code-workspace*.
 
 Usage:
   python sync.py              # write changes
@@ -18,7 +30,7 @@ import json
 import re
 import subprocess
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
@@ -62,20 +74,38 @@ def parse_workspace(path: Path) -> list[tuple[str | None, str]]:
     return [(f.get("name"), f["path"]) for f in data.get("folders", []) if f.get("path")]
 
 
-def git_info(repo_dir: Path) -> tuple[str | None, str]:
-    def run(*args: str) -> str | None:
-        try:
-            return subprocess.check_output(
-                ["git", "-C", str(repo_dir), *args],
-                stderr=subprocess.DEVNULL,
-                text=True,
-            ).strip()
-        except (subprocess.CalledProcessError, FileNotFoundError):
-            return None
+def git(repo_dir: Path, *args: str) -> str | None:
+    try:
+        return subprocess.check_output(
+            ["git", "-C", str(repo_dir), *args],
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
 
-    url = run("remote", "get-url", "origin")
-    branch = run("symbolic-ref", "--short", "HEAD") or "main"
+
+def repo_toplevel(abs_path: Path) -> Path | None:
+    """The enclosing git work-tree root, or None if not inside a repo."""
+    if not abs_path.is_dir():
+        return None
+    top = git(abs_path, "rev-parse", "--show-toplevel")
+    return Path(top).resolve() if top else None
+
+
+def git_origin(repo_dir: Path) -> tuple[str | None, str]:
+    url = git(repo_dir, "remote", "get-url", "origin")
+    branch = git(repo_dir, "symbolic-ref", "--short", "HEAD") or "main"
     return url, branch
+
+
+def repo_name_from_url(url: str | None) -> str | None:
+    """Canonical repo name = last URL path component, minus a .git suffix."""
+    if not url:
+        return None
+    tail = url.rstrip("/").rsplit("/", 1)[-1]
+    tail = tail[:-4] if tail.endswith(".git") else tail
+    return tail or None
 
 
 def rel_from_root(abs_path: Path) -> str | None:
@@ -85,8 +115,24 @@ def rel_from_root(abs_path: Path) -> str | None:
         return None
 
 
+def ancestor_match(
+    rel: str, by_path: dict[str, dict[str, str]]
+) -> dict[str, str] | None:
+    """Find a manifest entry whose path is `rel` or an ancestor of it.
+
+    Lets a subdir folder (`devops/bet_bot`) fall back to the repo entry
+    (`devops`) recorded in a previous manifest when the clone is missing
+    locally (e.g. sync run before bootstrap on a fresh machine).
+    """
+    p = PurePosixPath(rel)
+    for cand in (rel, *(str(a) for a in p.parents if str(a) != ".")):
+        if cand in by_path:
+            return by_path[cand]
+    return None
+
+
 def parse_existing_manifest() -> tuple[str, dict[str, dict[str, str]]]:
-    """Return (header_text_including_repos_line, entries_by_name)."""
+    """Return (header_text_including_repos_line, entries_by_path)."""
     text = MANIFEST.read_text(encoding="utf-8") if MANIFEST.exists() else ""
     lines = text.splitlines()
 
@@ -100,12 +146,12 @@ def parse_existing_manifest() -> tuple[str, dict[str, dict[str, str]]]:
         header = "\n".join(lines[:repos_idx]).rstrip() + "\n\n"
         body_lines = lines[repos_idx + 1 :]
 
-    entries: dict[str, dict[str, str]] = {}
+    raw: list[dict[str, str]] = []
     current: dict[str, str] = {}
     for line in body_lines:
         if m := re.match(r"\s*-\s*name:\s*(\S+)", line):
-            if current.get("name"):
-                entries[current["name"]] = current
+            if current:
+                raw.append(current)
             current = {"name": m.group(1)}
         elif m := re.match(r"\s*url:\s*(\S+)", line):
             current["url"] = m.group(1)
@@ -113,9 +159,11 @@ def parse_existing_manifest() -> tuple[str, dict[str, dict[str, str]]]:
             current["path"] = m.group(1)
         elif m := re.match(r"\s*branch:\s*(\S+)", line):
             current["branch"] = m.group(1)
-    if current.get("name"):
-        entries[current["name"]] = current
+    if current:
+        raw.append(current)
 
+    # Key by path — the stable identity. Entries without a path are unusable.
+    entries = {e["path"]: e for e in raw if e.get("path")}
     return header, entries
 
 
@@ -124,84 +172,93 @@ def collect_groups(
 ) -> tuple[list[tuple[str, list[dict[str, str]]]], list[dict[str, str]], list[str]]:
     """Return (grouped entries, orphan entries, skipped messages).
 
-    Each folder in each workspace becomes an entry. If the local clone is
-    missing but the manifest already has the repo, we preserve the manifest's
-    url/branch so bootstrap can still clone it later.
+    Each workspace folder resolves to its enclosing repo. Repos are deduped by
+    clone path, so a repo referenced from several workspaces (or via subdirs)
+    yields a single entry, grouped under the first workspace that claims it.
     """
     ws_files = sorted(WORKSPACES_DIR.glob("*.code-workspace"))
     groups: list[tuple[str, list[dict[str, str]]]] = []
-    seen_urls: dict[str, str] = {}   # url  -> claiming workspace
-    seen_names: dict[str, str] = {}  # name -> claiming workspace
+    seen_paths: dict[str, str] = {}  # repo path -> claiming workspace
     skipped: list[str] = []
-
-    existing_by_path = {e["path"]: e for e in existing.values() if e.get("path")}
 
     for ws_file in ws_files:
         ws_name = ws_file.stem
         group_entries: list[dict[str, str]] = []
+        local_names: dict[str, str] = {}  # name -> path, within THIS file only
         for fname, fpath in parse_workspace(ws_file):
             abs_path = (ws_file.parent / fpath).resolve()
+            folder_rel = rel_from_root(abs_path)
             label = fname or Path(fpath).name
-            rel = rel_from_root(abs_path)
-            if rel is None:
+            if folder_rel is None:
                 skipped.append(f"{label} ({ws_name}): outside PROJECT_ROOT")
                 continue
 
-            name = fname or abs_path.name
-
+            # Resolve the enclosing repo. The clone target is the repo root,
+            # not the (possibly sub-) folder the workspace points at.
+            top = repo_toplevel(abs_path)
             live_url: str | None = None
-            live_branch: str = "main"
-            if abs_path.is_dir() and (abs_path / ".git").exists():
-                live_url, live_branch = git_info(abs_path)
+            live_branch = "main"
+            if top is not None:
+                repo_rel = rel_from_root(top)
+                if repo_rel is None:
+                    skipped.append(f"{label} ({ws_name}): repo root outside PROJECT_ROOT")
+                    continue
+                fallback_name = top.name
+                live_url, live_branch = git_origin(top)
+            else:
+                # No work-tree (missing clone or not a repo): fall back to a
+                # prior manifest entry at this path or an ancestor of it.
+                prior_fb = existing.get(folder_rel) or ancestor_match(folder_rel, existing)
+                if not prior_fb:
+                    reason = (
+                        "dir not found, no manifest fallback"
+                        if not abs_path.is_dir()
+                        else "not a git repo, no manifest fallback"
+                    )
+                    skipped.append(f"{label} ({ws_name}): {reason}")
+                    continue
+                repo_rel = prior_fb["path"]
+                fallback_name = prior_fb.get("name") or Path(repo_rel).name
 
-            # url / branch are sticky: once recorded in the manifest they
-            # represent "initial clone branch + canonical url" and should
-            # not be clobbered by drift in the local clone (e.g. a remote
-            # that was never renamed after a GitHub rename, or a user
-            # checking out a feature branch). Only derive from live state
-            # for brand-new entries.
-            # Match prior entry by path — name alone is ambiguous when two
-            # workspaces happen to reuse the same folder label for different
-            # repos (e.g. royal/devops vs top-level devops).
-            prior = existing_by_path.get(rel)
-            url = prior.get("url") if prior else None
-            branch = prior.get("branch") if prior else None
+            # url / branch are sticky: once recorded they mean "canonical url +
+            # initial clone branch" and survive local drift (a remote not
+            # renamed after a GitHub rename, or a checked-out feature branch).
+            prior = existing.get(repo_rel)
+            url = (prior or {}).get("url") or live_url
+            branch = (prior or {}).get("branch") or live_branch or "main"
 
-            if not url:
-                url = live_url
-            elif live_url and live_url != url:
+            if prior and prior.get("url") and live_url and live_url != prior["url"]:
                 skipped.append(
-                    f"{label} ({ws_name}): url drift — manifest={url} "
+                    f"{label} ({ws_name}): url drift — manifest={prior['url']} "
                     f"local={live_url} (manifest kept; update remote or edit manifest)"
                 )
-            if not branch:
-                branch = live_branch or "main"
 
             if not url:
-                reason = (
-                    "dir not found, no manifest fallback"
-                    if not abs_path.is_dir()
-                    else "not a git repo, no manifest fallback"
-                    if not (abs_path / ".git").exists()
-                    else "no origin remote, no manifest fallback"
-                )
-                skipped.append(f"{label} ({ws_name}): {reason}")
+                skipped.append(f"{label} ({ws_name}): no origin remote, no manifest fallback")
                 continue
 
-            if url in seen_urls:
-                continue  # already claimed by an earlier workspace
+            # Manifest name = canonical repo name from its origin URL — stable
+            # and decoupled from both the VS Code folder label and the local
+            # directory name (on-the-sky/royal_docs.git in royal/docs/ stays
+            # "royal_docs").
+            name = repo_name_from_url(url) or fallback_name
 
-            if name in seen_names:
+            # Within one .code-workspace, two folders sharing a display label
+            # are ambiguous in the Explorer — flag it (fine across files though).
+            if label in local_names and local_names[label] != repo_rel:
                 skipped.append(
-                    f"{label} ({ws_name}): name collides with "
-                    f"'{name}' from {seen_names[name]} — rename the folder"
+                    f"{label} ({ws_name}): folder label reused in this workspace "
+                    f"for a different repo — give them distinct names"
                 )
+            local_names[label] = repo_rel
+
+            # Dedupe by repo path: same clone referenced more than once.
+            if repo_rel in seen_paths:
                 continue
 
-            seen_urls[url] = ws_name
-            seen_names[name] = ws_name
+            seen_paths[repo_rel] = ws_name
             group_entries.append(
-                {"name": name, "url": url, "path": rel, "branch": branch}
+                {"name": name, "url": url, "path": repo_rel, "branch": branch}
             )
 
         if group_entries:
@@ -209,13 +266,13 @@ def collect_groups(
 
     # Orphans: entries in old manifest not claimed by any workspace.
     orphans: list[dict[str, str]] = []
-    for n, e in existing.items():
-        if n in seen_names:
+    for path, e in existing.items():
+        if path in seen_paths:
             continue
-        if not all(k in e for k in ("url", "path", "branch")):
+        if not all(k in e for k in ("name", "url", "path", "branch")):
             continue
-        orphans.append({"name": n, **{k: e[k] for k in ("url", "path", "branch")}})
-    orphans.sort(key=lambda e: e["name"])
+        orphans.append({k: e[k] for k in ("name", "url", "path", "branch")})
+    orphans.sort(key=lambda e: e["path"])
 
     return groups, orphans, skipped
 
@@ -248,45 +305,45 @@ def diff_report(
     orphans: list[dict[str, str]],
     skipped: list[str],
 ) -> None:
-    new_by_name = {e["name"]: e for _, entries in groups for e in entries}
+    new_by_path = {e["path"]: e for _, entries in groups for e in entries}
     for e in orphans:
-        new_by_name[e["name"]] = e
+        new_by_path[e["path"]] = e
 
-    cur_group = {e["name"]: ws for ws, entries in groups for e in entries}
+    cur_group = {e["path"]: ws for ws, entries in groups for e in entries}
     for e in orphans:
-        cur_group[e["name"]] = "orphan"
+        cur_group[e["path"]] = "orphan"
 
-    added = sorted(n for n in new_by_name if n not in old)
-    removed = sorted(n for n in old if n not in new_by_name)
+    added = sorted(p for p in new_by_path if p not in old)
+    removed = sorted(p for p in old if p not in new_by_path)
     updated: list[tuple[str, list[str]]] = []
-    for n, e in new_by_name.items():
-        if n not in old:
+    for p, e in new_by_path.items():
+        if p not in old:
             continue
         changes = [
-            f"{k}: {old[n].get(k)} -> {e[k]}"
-            for k in ("url", "path", "branch")
-            if old[n].get(k) != e[k]
+            f"{k}: {old[p].get(k)} -> {e[k]}"
+            for k in ("name", "url", "branch")
+            if old[p].get(k) != e[k]
         ]
         if changes:
-            updated.append((n, changes))
+            updated.append((p, changes))
 
     print()
     print("-- sync summary --")
     if added:
         print(f"Added ({len(added)}):")
-        for n in added:
-            e = new_by_name[n]
-            print(f"  + {n:20s} [{cur_group[n]}]  {e['path']}")
+        for p in added:
+            e = new_by_path[p]
+            print(f"  + {e['name']:20s} [{cur_group[p]}]  {p}")
     if updated:
         print(f"Updated ({len(updated)}):")
-        for n, ch in updated:
-            print(f"  ~ {n:20s} [{cur_group[n]}]")
+        for p, ch in updated:
+            print(f"  ~ {new_by_path[p]['name']:20s} [{cur_group[p]}]  {p}")
             for c in ch:
                 print(f"      {c}")
     if removed:
         print(f"Removed ({len(removed)}):")
-        for n in removed:
-            print(f"  - {n}  (was {old[n].get('path', '?')})")
+        for p in removed:
+            print(f"  - {old[p].get('name', '?')}  (was {p})")
     if orphans:
         print(f"Orphans ({len(orphans)}) — kept but not in any workspace:")
         for e in orphans:
@@ -300,6 +357,14 @@ def diff_report(
 
 
 def main() -> int:
+    # The summary uses ✓/✗/— glyphs; a legacy Windows console (cp950/Big5)
+    # raises UnicodeEncodeError on those. Force UTF-8 so it never crashes.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8")
+        except (AttributeError, ValueError):
+            pass
+
     parser = argparse.ArgumentParser(description="Sync manifest.yaml from workspace files.")
     parser.add_argument("--dry-run", action="store_true", help="preview, do not write")
     args = parser.parse_args()

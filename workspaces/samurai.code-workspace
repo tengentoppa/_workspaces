@@ -27,7 +27,7 @@
 			"path": "../../base"
 		},
 		{
-			"name": "devops",
+			"name": "devops/bet_bot",
 			"path": "../../devops/bet_bot"
 		}
 	],

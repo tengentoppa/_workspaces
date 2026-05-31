@@ -32,7 +32,7 @@
 			"path": "../../share/data_cli"
 		},
 		{
-			"name": "devops",
+			"name": "devops/watcher",
 			"path": "../../devops/watcher"
 		}
 	],

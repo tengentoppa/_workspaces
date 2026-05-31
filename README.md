@@ -100,3 +100,10 @@ code workspaces/sport_scout.code-workspace
 - workspace 裡的 git 多 repo 操作，VSCode 原生 Source Control 面板已經會自動列每個 folder 的變更，task 裡的 `git: status (all repos)` 是給 terminal 一次掃過用
 - 不要在 workspace 內寫絕對路徑 (`D:/...` 或 `/home/...`)，會破壞跨機器可攜性
 - 不要 commit `.env` 或私人變體 — 用 `*.local.code-workspace` 命名，已被 `.gitignore` 擋掉
+- workspace folder 可以指向「某個 repo 的子目錄」，不必是 repo 根。例如 `devops/bet_bot`、
+  `devops/watcher` 都是同一個 `devops` repo 的子目錄；`sync.py` 會用 `git rev-parse
+  --show-toplevel` 把它們解析回 repo 根 `devops`，manifest 只記一筆、bootstrap 只 clone 一次。
+- 同一個 repo 可被多個 workspace 共用（如 `devops`、`share/data_cli`），manifest 以 **clone 路徑**
+  為唯一鍵、`name` 取自 origin URL，所以 `devops`(on-the-sky) 與 `royal/devops`(royal98dev)
+  是兩筆不同 entry，互不衝突。folder 的 `name` 只是 Explorer 顯示標籤，僅需在「單一
+  .code-workspace 內」唯一即可；跨 workspace 重用同名沒問題。

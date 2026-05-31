@@ -24,7 +24,7 @@
 			"path": "../../royal/crypto_hound"
 		},
 		{
-			"name": "devops",
+			"name": "royal/devops",
 			"path": "../../royal/devops"
 		},
 		{
@@ -234,7 +234,7 @@
 				"command": "bash",
 				"args": [
 					"-lc",
-					"set +e; for f in \"${workspaceFolder:safe_trade}\" \"${workspaceFolder:sport_scout_royal}\" \"${workspaceFolder:core_wallet}\" \"${workspaceFolder:crypto_hound}\" \"${workspaceFolder:union_wallet}\" \"${workspaceFolder:devops}\"; do echo; echo '=== '$(basename \"$f\")' ==='; git -C \"$f\" status -sb || echo '(skip)'; done"
+					"set +e; for f in \"${workspaceFolder:safe_trade}\" \"${workspaceFolder:sport_scout_royal}\" \"${workspaceFolder:core_wallet}\" \"${workspaceFolder:crypto_hound}\" \"${workspaceFolder:union_wallet}\" \"${workspaceFolder:safe_trade}/../devops\"; do echo; echo '=== '$(basename \"$f\")' ==='; git -C \"$f\" status -sb || echo '(skip)'; done"
 				],
 				"presentation": { "panel": "dedicated", "reveal": "always" }
 			},
@@ -244,7 +244,7 @@
 				"command": "bash",
 				"args": [
 					"-lc",
-					"set +e; for f in \"${workspaceFolder:safe_trade}\" \"${workspaceFolder:sport_scout_royal}\" \"${workspaceFolder:core_wallet}\" \"${workspaceFolder:crypto_hound}\" \"${workspaceFolder:union_wallet}\" \"${workspaceFolder:devops}\"; do echo; echo '=== '$(basename \"$f\")' ==='; git -C \"$f\" fetch --all --prune || echo '(skip)'; done"
+					"set +e; for f in \"${workspaceFolder:safe_trade}\" \"${workspaceFolder:sport_scout_royal}\" \"${workspaceFolder:core_wallet}\" \"${workspaceFolder:crypto_hound}\" \"${workspaceFolder:union_wallet}\" \"${workspaceFolder:safe_trade}/../devops\"; do echo; echo '=== '$(basename \"$f\")' ==='; git -C \"$f\" fetch --all --prune || echo '(skip)'; done"
 				],
 				"presentation": { "panel": "dedicated", "reveal": "always" }
 			}
