@@ -29,6 +29,10 @@
 		{
 			"name": "devops/bet_bot",
 			"path": "../../devops/bet_bot"
+		},
+		{
+			"name": "research",
+			"path": "../../samurai/research"
 		}
 	],
 
