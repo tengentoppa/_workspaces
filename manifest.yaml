@@ -95,6 +95,10 @@ repos:
     url: https://github.com/on-the-sky/devops.git
     path: devops
     branch: main
+  - name: samurai_research
+    url: https://github.com/on-the-sky/samurai_research.git
+    path: samurai/research
+    branch: main
 
   # ─── sport_scout workspace ───
   - name: sport_spy
