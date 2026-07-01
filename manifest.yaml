@@ -10,36 +10,6 @@
 #     之後本地各自切換 branch，bootstrap 不會強迫覆寫。
 
 repos:
-  # ─── prototype workspace ───
-  - name: base_template
-    url: https://github.com/on-the-sky/base_template.git
-    path: prototype/base_template
-    branch: main
-  - name: chat_forge
-    url: https://github.com/on-the-sky/chat_forge.git
-    path: prototype/chat_forge
-    branch: main
-  - name: chat_bridge
-    url: https://github.com/on-the-sky/chat_bridge.git
-    path: prototype/chat_bridge
-    branch: main
-  - name: chat_admin
-    url: https://github.com/on-the-sky/chat_admin.git
-    path: prototype/chat_admin
-    branch: main
-  - name: net_agent
-    url: https://github.com/on-the-sky/net_agent.git
-    path: prototype/net_agent
-    branch: main
-  - name: session_hub
-    url: https://github.com/on-the-sky/session_hub.git
-    path: prototype/session_hub
-    branch: main
-  - name: packages
-    url: https://github.com/on-the-sky/packages.git
-    path: prototype/packages
-    branch: main
-
   # ─── safe_trade workspace ───
   - name: safe_trade
     url: https://github.com/royal98dev/safe_trade.git
@@ -130,4 +100,30 @@ repos:
   - name: _workspaces
     url: https://github.com/tengentoppa/_workspaces.git
     path: _workspaces
+    branch: main
+
+  # ─── tg_core workspace ───
+  - name: base_template
+    url: https://github.com/on-the-sky/base_template.git
+    path: tg_core/base_template
+    branch: main
+  - name: chat_bridge
+    url: https://github.com/on-the-sky/chat_bridge.git
+    path: tg_core/chat_bridge
+    branch: main
+  - name: chat_admin
+    url: https://github.com/on-the-sky/chat_admin.git
+    path: tg_core/chat_admin
+    branch: main
+  - name: net_agent
+    url: https://github.com/on-the-sky/net_agent.git
+    path: tg_core/net_agent
+    branch: main
+  - name: session_hub
+    url: https://github.com/on-the-sky/session_hub.git
+    path: tg_core/session_hub
+    branch: main
+  - name: packages
+    url: https://github.com/on-the-sky/packages.git
+    path: tg_core/packages
     branch: main

@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "../../tg_core/base_template"
+		},
+		{
+			"path": "../../tg_core/chat_bridge"
+		},
+		{
+			"path": "../../tg_core/chat_admin"
+		},
+		{
+			"path": "../../tg_core/net_agent"
+		},
+		{
+			"path": "../../tg_core/session_hub"
+		},
+		{
+			"path": "../../tg_core/packages"
+		}
+	],
+	"settings": {}
+}
